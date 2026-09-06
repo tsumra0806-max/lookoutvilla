@@ -46,14 +46,14 @@ function AccommodationRow({ a, busyToday, upcoming, onChanged }: { a: Acc; busyT
     setSaving(true);
     const { error } = await supabase.from("accommodations").update({ price_per_night: Number(price), capacity: Number(capacity) }).eq("id", a.id);
     setSaving(false);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success(`${a.name} updated`);
     onChanged();
   }
 
   async function toggle(v: boolean) {
     const { error } = await supabase.from("accommodations").update({ is_available: v }).eq("id", a.id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success(v ? `${a.name} is now open for booking` : `${a.name} closed`);
     onChanged();
   }
@@ -91,9 +91,9 @@ function BlocksPanel({ accommodations, blocks, onChanged }: { accommodations: Ac
 
   async function addBlock(e: React.FormEvent) {
     e.preventDefault();
-    if (!accId || !(start < end)) return toast.error("Choose a valid date range.");
+    if (!accId || !(start < end)) { toast.error("Choose a valid date range."); return; }
     const { error } = await supabase.from("accommodation_blocks").insert({ accommodation_id: accId, start_date: start, end_date: end, reason: reason || null });
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("Dates blocked");
     setReason("");
     onChanged();
@@ -101,7 +101,7 @@ function BlocksPanel({ accommodations, blocks, onChanged }: { accommodations: Ac
 
   async function remove(id: string) {
     const { error } = await supabase.from("accommodation_blocks").delete().eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     onChanged();
   }
 

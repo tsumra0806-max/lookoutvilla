@@ -25,14 +25,14 @@ export function BookingsTable({ bookings, loading, onChanged }: { bookings: Admi
 
   async function setStatus(id: string, status: Status) {
     const { error } = await supabase.from("bookings").update({ status }).eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success(`Booking ${status}`);
     onChanged();
   }
 
   async function saveNote(id: string) {
     const { error } = await supabase.from("bookings").update({ admin_notes: note }).eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("Note saved");
     setNoteFor(null);
     onChanged();

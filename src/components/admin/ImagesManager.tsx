@@ -51,7 +51,7 @@ function GalleryUploader({ onChanged }: { onChanged: () => void }) {
   async function onUpload(e: React.FormEvent) {
     e.preventDefault();
     const file = fileRef.current?.files?.[0];
-    if (!file) return toast.error("Choose an image first.");
+    if (!file) { toast.error("Choose an image first."); return; }
     setBusy(true);
     try {
       const { path, url } = await uploadFile(file, "gallery");
@@ -71,7 +71,7 @@ function GalleryUploader({ onChanged }: { onChanged: () => void }) {
 
   async function remove(id: string, path: string | null) {
     const { error } = await supabase.from("resort_images").delete().eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     if (path) await supabase.storage.from("resort-images").remove([path]);
     images.refetch();
     onChanged();
@@ -130,7 +130,7 @@ function AccommodationPhotos({ accommodations, onChanged }: { accommodations: Ac
 
   async function reset(a: Acc) {
     const { error } = await supabase.from("accommodations").update({ image_url: null }).eq("id", a.id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     onChanged();
   }
 
